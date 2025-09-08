@@ -3,13 +3,27 @@ import 'package:get/get.dart';
 import '../controllers/team_controller.dart';
 import '../widgets/pokemon_list.dart';
 import 'team_preview_page.dart';
+import 'about_page.dart';
+import 'settings_page.dart';
 
-class MainPage extends StatelessWidget {
-  MainPage({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   final TeamController teamCtrl = Get.find<TeamController>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _searchCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _searchCtrl.dispose();
+    super.dispose();
+  }
 
   void _openRenameDialog(BuildContext context) {
     _nameController.text = teamCtrl.teamName.value;
@@ -46,26 +60,27 @@ class MainPage extends StatelessWidget {
         title: Obx(() => Text(teamCtrl.teamName.value)),
         actions: [
           // ตัวนับทีมแบบ Chip
-          Obx(() => Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: cs.secondaryContainer,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      '${teamCtrl.team.length}/3',
-                      style: TextStyle(
-                        color: cs.onSecondaryContainer,
-                        fontWeight: FontWeight.w700,
-                      ),
+          Obx(
+            () => Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: cs.secondaryContainer,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    '${teamCtrl.team.length}/3',
+                    style: TextStyle(
+                      color: cs.onSecondaryContainer,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
           IconButton(
             tooltip: 'Edit Team Name',
             icon: const Icon(Icons.edit),
@@ -75,6 +90,20 @@ class MainPage extends StatelessWidget {
             tooltip: 'Reset Team',
             icon: const Icon(Icons.refresh),
             onPressed: teamCtrl.resetTeam,
+          ),
+          // ⬇️ เมนู 3 จุด: ไป Settings และ About
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'settings') {
+                Get.to(() => const SettingsPage());
+              } else if (value == 'about') {
+                Get.to(() => const AboutPage());
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: 'settings', child: Text('Settings')),
+              PopupMenuItem(value: 'about', child: Text('About')),
+            ],
           ),
         ],
       ),
@@ -114,10 +143,11 @@ class MainPage extends StatelessWidget {
           const SizedBox(height: 8),
           // รายการโปเกมอน
           Expanded(child: PokemonList()),
+
         ],
       ),
 
-      // ✅ เหลือปุ่ม Preview ตำแหน่งเดียว (FAB)
+      // ✅ ปุ่ม Preview
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openPreview,
         icon: const Icon(Icons.visibility_rounded),

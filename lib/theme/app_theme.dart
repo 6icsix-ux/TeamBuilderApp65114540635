@@ -25,6 +25,8 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: Colors.white,
+        // ถ้าเวอร์ชันของคุณยังไม่มี surfaceTintColor ให้ลบบรรทัดนี้ทิ้งได้
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -39,6 +41,9 @@ class AppTheme {
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 2),
+      popupMenuTheme: PopupMenuThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      ),
     );
   }
 
@@ -50,6 +55,14 @@ class AppTheme {
 
     return base.copyWith(
       textTheme: GoogleFonts.poppinsTextTheme(base.textTheme),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: base.colorScheme.onSurface,
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 20, fontWeight: FontWeight.w700, color: base.colorScheme.onSurface,
+        ),
+      ),
       cardTheme: CardThemeData(
         color: base.colorScheme.surfaceContainerHighest,
         elevation: 0,
@@ -64,6 +77,9 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }
